@@ -7,7 +7,7 @@
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:#05051a;font-family:'Cormorant Garamond',Georgia,serif;color:#f3e9ff;-webkit-user-select:none;user-select:none;touch-action:none}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#05051a;font-family:'Cormorant Garamond',Georgia,serif;color:#f3e9ff;-webkit-user-select:none;user-select:none;touch-action:none}
 canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;filter:saturate(1.18) contrast(1.05)}
 .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;background:radial-gradient(ellipse at 50% 30%,rgba(70,34,130,.82),rgba(5,5,26,.97));z-index:30;transition:opacity .6s,visibility .6s}
 .overlay.clear{background:rgba(5,5,26,.55);backdrop-filter:blur(3px)}
@@ -1434,7 +1434,11 @@ function updateAtmosphere(dt){
   if(bloom)bloom.strength=damp(bloom.strength,inn?.4:.55+G.wishPower*.55,3,dt);
 }
 /* ================= input ================= */
-function requestLock(){if(touchMode)return;try{const p=canvas.requestPointerLock();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
+let inFrame=false;try{inFrame=window.self!==window.top}catch(e){inFrame=true}
+function enableDragLook(){if(G.dragLook)return;G.dragLook=true;hintShow('Mantén clic izquierdo y arrastra para mirar',5000)}
+if(inFrame)G.dragLook=true; /* embedded (xat etc.): pointer lock is usually blocked by the sandbox */
+function requestLock(){if(touchMode||G.dragLook)return;try{const p=canvas.requestPointerLock();if(p&&p.catch)p.catch(()=>enableDragLook())}catch(e){enableDragLook()}}
+document.addEventListener('pointerlockerror',()=>enableDragLook());
 document.addEventListener('pointerlockchange',()=>{
   const locked=document.pointerLockElement===canvas;
   if(!locked&&G.playing&&!G.paused&&!G.ui&&!G.expectUnlock&&!G.starting&&!touchMode)pauseGame();
@@ -1443,7 +1447,7 @@ document.addEventListener('pointerlockchange',()=>{
   if(locked)$('finBtns').style.display='none'});
 document.addEventListener('mousemove',e=>{
   if(!G.playing||G.paused||G.ui)return;
-  if(document.pointerLockElement===canvas||G.dragLook&&(e.buttons&1)){look(e.movementX||0,e.movementY||0,.0022)}});
+  if(document.pointerLockElement===canvas||G.dragLook&&(e.buttons&1)){look(e.movementX||0,e.movementY||0,G.dragLook&&!document.pointerLockElement?.0035:.0022)}});
 function look(dx,dy,s){player.yaw-=dx*s;player.pitch=clamp(player.pitch-dy*s,-1.45,1.45)}
 addEventListener('keydown',e=>{
   if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')&&e.code!=='Escape')return;
@@ -1457,10 +1461,18 @@ addEventListener('keydown',e=>{
 });
 addEventListener('keyup',e=>{keys[e.code]=false});
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false});
+let dragDown=null;
 canvas.addEventListener('mousedown',e=>{
   if(!G.playing||G.paused||G.ui)return;
-  if(!touchMode&&document.pointerLockElement!==canvas){requestLock();return}
+  if(G.dragLook&&!touchMode){dragDown={x:e.clientX,y:e.clientY,b:e.button};return}
+  if(!touchMode&&document.pointerLockElement!==canvas){requestLock();if(!G.dragLook)return;dragDown={x:e.clientX,y:e.clientY,b:e.button};return}
   if(e.button===0){if(G.mode==='fly')doDrop();else doInteract()}
+});
+/* drag-look mode: a click without dragging = action, dragging = look around */
+addEventListener('mouseup',e=>{
+  if(!dragDown)return;const d=dragDown;dragDown=null;
+  if(!G.playing||G.paused||G.ui||d.b!==0)return;
+  if(Math.hypot(e.clientX-d.x,e.clientY-d.y)<6){if(G.mode==='fly')doDrop();else doInteract()}
 });
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 /* touch */
