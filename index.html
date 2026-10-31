@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>La Noche Encantada de Mysh</title>
+<title>El Halloween de Mysh bajo la luna</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -11,6 +11,7 @@ html,body{height:100%;overflow:hidden;background:#05051a;font-family:'Cormorant 
 canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;filter:saturate(1.18) contrast(1.05)}
 .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;background:radial-gradient(ellipse at 50% 30%,rgba(70,34,130,.82),rgba(5,5,26,.97));z-index:30;transition:opacity .6s,visibility .6s}
 .overlay.clear{background:rgba(5,5,26,.55);backdrop-filter:blur(3px)}
+#menu{display:none!important}
 .hidden{opacity:0;pointer-events:none;visibility:hidden}
 h1,h2{font-family:'Cinzel Decorative',Georgia,serif;color:#ffb347;text-shadow:0 0 16px #ff7a18,0 0 38px #8a3cff;letter-spacing:.04em}
 h1{font-size:clamp(28px,6vw,62px);margin-bottom:6px}
@@ -20,23 +21,10 @@ button.mag{font-family:inherit;font-size:22px;font-weight:700;color:#fff;padding
 button.mag:hover{transform:scale(1.05);box-shadow:0 0 30px #ff9a3c,inset 0 0 14px rgba(255,200,120,.5)}
 button.mag:disabled{opacity:.5;cursor:wait}
 button.mag.small{font-size:17px;padding:8px 22px}
-.guide{display:grid;grid-template-columns:auto auto;gap:4px 18px;text-align:left;font-size:17px;margin:12px 0 18px;color:#e4d6ff}
+.guide{display:none;grid-template-columns:auto auto;gap:4px 18px;text-align:left;font-size:17px;margin:12px 0 18px;color:#e4d6ff}
 .guide b{color:#ffcf7a}
 .opt{font-size:17px;margin:6px;color:#d9c8ff}
 select,input[type=range]{font-family:inherit;font-size:16px;background:#1b1140;color:#fff;border:1px solid #6a45c8;border-radius:8px;padding:3px 6px}
-#joy{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:max(30px,env(safe-area-inset-bottom));width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(160,120,255,.28),rgba(160,120,255,.1));border:2px solid rgba(200,170,255,.6);pointer-events:auto;touch-action:none}
-#joyKnob{position:absolute;left:47px;top:47px;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle,rgba(255,225,160,.95),rgba(255,170,70,.7));box-shadow:0 0 14px rgba(255,190,100,.8)}
-.tb{position:absolute;pointer-events:auto;touch-action:none;width:64px;height:64px;border-radius:50%;background:rgba(40,20,90,.55);border:2px solid #ffc27a;color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;font-family:inherit;box-shadow:0 0 12px rgba(255,170,70,.5);transition:opacity .2s,transform .1s}
-.tb:active{transform:scale(.92);background:rgba(255,150,50,.6)}
-.tb.big{width:88px;height:88px;font-size:38px;right:max(22px,env(safe-area-inset-right));bottom:max(30px,env(safe-area-inset-bottom));opacity:.5}
-.tb.big.ready{opacity:1;background:rgba(255,140,40,.7);box-shadow:0 0 26px #ff9a3c;animation:pulse 1.2s infinite}
-@keyframes pulse{50%{transform:scale(1.07)}}
-#tbJump{right:128px;bottom:36px}#tbUp{right:30px;bottom:136px}#tbDn{right:112px;bottom:128px}#tbBoost{right:130px;bottom:40px}
-#tbAuto{right:18px;top:60px;width:54px;height:54px;font-size:22px}#tbPause{left:14px;top:12px;width:48px;height:48px;font-size:20px}
-.hide{display:none!important}
-body.touch #chapterEl{left:74px;top:22px}body.touch #candyEl{top:14px;right:82px;font-size:18px}body.touch #charmEl{top:44px;right:82px;font-size:16px}body.touch #promptEl{bottom:30%;font-size:22px}body.touch #flyEl{display:none}
-body.touch #wishBox{padding:16px 18px}body.touch .guide{display:none}
-body.touch h1{font-size:30px}body.touch #hintEl{top:7%;font-size:18px}
 #hud div{position:fixed;pointer-events:none;z-index:10}
 #cross{left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:rgba(255,235,200,.55);box-shadow:0 0 8px rgba(255,190,100,.7)}
 #chapterEl{left:18px;top:14px;font-size:19px;font-style:italic;color:#d8c6ff;text-shadow:0 0 10px #6a45c8;opacity:.0;transition:opacity 1s}
@@ -56,6 +44,34 @@ body.touch h1{font-size:30px}body.touch #hintEl{top:7%;font-size:18px}
 #finMsg{font-family:'Cinzel Decorative',Georgia,serif;font-size:clamp(24px,4.6vw,52px);color:#fff4d6;text-shadow:0 0 14px #ffd27a,0 0 34px #ff7ad9,0 0 60px #6ad8ff;max-width:88vw;line-height:1.25}
 #finale{background:radial-gradient(ellipse at 50% 55%,rgba(40,20,90,.45),rgba(5,5,26,.1))}
 #touch{position:fixed;inset:0;z-index:12;pointer-events:none;display:none}
+#joy{position:absolute;left:26px;bottom:34px;width:130px;height:130px;border-radius:50%;background:rgba(160,120,255,.18);border:1px solid rgba(200,170,255,.5);pointer-events:auto}
+#joyKnob{position:absolute;left:40px;top:40px;width:50px;height:50px;border-radius:50%;background:rgba(255,210,140,.55)}
+.tb{position:absolute;pointer-events:auto;width:70px;height:70px;border-radius:50%;background:rgba(255,170,70,.35);border:1px solid #ffc27a;color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9;background:radial-gradient(ellipse at center,transparent 55%,rgba(2,2,14,.55))}
+#tbF,#tbDn{display:none}
+.tb{-webkit-tap-highlight-color:transparent;font-size:16px;font-weight:700}
+@property --s{syntax:'<number>';inherits:false;initial-value:.35}
+#intro{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:11vh;background:#02020a;overflow:hidden;cursor:pointer;transition:opacity 1.8s,visibility 1.8s;touch-action:none}
+#intro.done{opacity:0;visibility:hidden;pointer-events:none}
+#warm{position:absolute;inset:0;opacity:0;transition:opacity 3.2s ease-out;background:radial-gradient(ellipse at 50% 72%,rgba(255,170,70,.6),rgba(100,44,160,.6) 50%,rgba(5,5,26,.96) 85%)}
+#intro.lit #warm{opacity:1}
+#candle{position:relative;width:60px;height:190px;flex:none;z-index:1}
+#wax{position:absolute;bottom:0;left:10px;width:40px;height:130px;border-radius:6px 6px 4px 4px;background:linear-gradient(90deg,#b8a684,#fff3d6 45%,#cdbb96);box-shadow:0 0 18px rgba(255,170,70,.25)}
+#wax::before{content:'';position:absolute;top:-3px;left:0;width:100%;height:12px;border-radius:50%;background:#f2e2bc}
+#wick{position:absolute;left:29px;bottom:128px;width:3px;height:16px;background:#2a1a10;border-radius:2px}
+#flame{position:absolute;left:21px;bottom:140px;width:18px;height:44px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 72%,#fff8d8,#ffc24a 45%,#ff7a18 80%,transparent);transform-origin:50% 100%;--s:.35;opacity:.6;transition:--s 1.6s,opacity 1s;animation:flick .17s infinite alternate}
+#intro.lit #flame{--s:1.2;opacity:1}
+@keyframes flick{from{transform:scale(var(--s)) rotate(-2.5deg)}to{transform:scale(var(--s)) skewX(3deg) rotate(2.5deg)}}
+#glow{position:absolute;left:30px;bottom:162px;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,110,.85),rgba(255,130,40,.3) 42%,transparent 70%);transform:translate(-50%,50%) scale(1.5);transition:transform 3.6s ease-out;pointer-events:none}
+#intro.lit #glow{transform:translate(-50%,50%) scale(70)}
+#tapHint{position:relative;z-index:1;margin-top:24px;font-size:clamp(18px,3vw,24px);font-style:italic;color:#d8c6ff;letter-spacing:.08em;animation:pulse 2.2s ease-in-out infinite;transition:opacity .8s}
+#intro.lit #tapHint{opacity:0;animation:none}
+@keyframes pulse{50%{opacity:.35}}
+#nameEl{position:absolute;top:17%;left:0;right:0;text-align:center;z-index:2;font-family:'Cinzel Decorative',Georgia,serif;font-size:clamp(56px,16vw,150px);color:#fff4d6;text-shadow:0 0 24px #ffb347,0 0 60px #8a3cff;opacity:0;filter:blur(14px);letter-spacing:.02em;transition:opacity 2.2s,filter 2.2s,letter-spacing 3s}
+#subEl{position:absolute;top:calc(17% + clamp(70px,20vw,190px));left:0;right:0;text-align:center;z-index:2;font-style:italic;font-size:clamp(18px,3.4vw,28px);color:#f0e2ff;text-shadow:0 0 14px #5a2a8a;opacity:0;transition:opacity 2s 1.2s}
+#intro.name #nameEl{opacity:1;filter:blur(0);letter-spacing:.14em}
+#intro.name #subEl{opacity:1}
 </style></head>
 <body>
 <canvas id="c"></canvas>
@@ -63,42 +79,40 @@ body.touch h1{font-size:30px}body.touch #hintEl{top:7%;font-size:18px}
  <div id="cross"></div><div id="chapterEl"></div><div id="promptEl"></div><div id="capEl"></div><div id="hintEl"></div><div id="candyEl"></div><div id="charmEl"></div><div id="flyEl"></div>
 </div>
 <div id="fade"></div>
-<div id="touch">
- <div id="joy"><div id="joyKnob"></div></div>
- <div class="tb big" id="tbE">✋</div>
- <div class="tb" id="tbJump">⤒</div>
- <div class="tb fl" id="tbUp">▲</div>
- <div class="tb fl" id="tbDn">▼</div>
- <div class="tb fl" id="tbBoost">⚡</div>
- <div class="tb fl small" id="tbAuto">✈</div>
- <div class="tb small" id="tbPause">☰</div>
+<div id="intro"><div id="warm"></div><div id="nameEl">Mysh</div><div id="subEl">una aventura de Halloween, solo para ti</div><div id="candle"><div id="glow"></div><div id="flame"></div><div id="wick"></div><div id="wax"></div></div><div id="tapHint">Toca la vela</div></div>
+<div id="touch"><div id="joy"><div id="joyKnob"></div></div>
+ <div class="tb" id="tbE" style="right:28px;bottom:46px">E</div>
+ <div class="tb" id="tbUp" style="right:110px;bottom:120px;width:58px;height:58px">▲</div>
+ <div class="tb" id="tbDn" style="right:28px;bottom:132px;width:58px;height:58px">▼</div>
+ <div class="tb" id="tbF" style="right:110px;bottom:46px;width:58px;height:58px">Auto</div>
+ <div class="tb" id="tbP" style="right:14px;top:84px;width:42px;height:42px;font-size:15px">❚❚</div>
 </div>
 
 <div id="menu" class="overlay">
- <h1>🎃 La Noche Encantada de Mysh 🎃</h1>
- <div class="sub">Mysh, entra en la historia: recorre el bosque, explora la mansión, vuela en la escoba y pide un deseo.</div>
+ <h1>🎃 El Halloween de Mysh 🎃</h1>
+ <div class="sub">Step inside the story — walk the forest, haunt the manor, ride the broom, make a wish.</div>
  <div class="guide">
-  <b>W A S D</b><span>caminar</span><b>Ratón</b><span>mirar alrededor</span><b>E / Clic</b><span>interactuar</span>
-  <b>Shift</b><span>correr / volar más rápido</span><b>Espacio · C</b><span>saltar · subir · bajar</span><b>Mantén W</b><span>volar hacia adelante</span>
-  <b>F</b><span>volar solo al patio</span><b>Esc</b><span>pausa y ajustes</span>
+  <b>W A S D</b><span>walk</span><b>Mouse</b><span>look around</span><b>E / Click</b><span>interact</span>
+  <b>Shift</b><span>run / fly faster</span><b>Space · C</b><span>jump · fly up · fly down</span><b>Hold W</b><span>fly forward (broom)</span>
+  <b>F</b><span>auto-fly to the courtyard</span><b>Esc</b><span>pause &amp; settings</span>
  </div>
  <label class="opt">Calidad <select id="qualitySel"><option value="high">Alta (brillo)</option><option value="low">Baja (más fluida)</option></select></label>
- <button class="mag" id="startBtn" disabled>Preparando la luz de luna…</button>
- <div class="sub" style="margin:8px 0 0;font-size:15px">Se recomiendan audífonos · espeluznante pero apto para toda la familia · sin sustos</div>
+ <button class="mag" id="startBtn" disabled>Brewing moonlight…</button>
+ <div class="sub" style="margin:8px 0 0;font-size:15px">Headphones recommended · family-friendly spooky · no jump scares</div>
 </div>
 
 <div id="pause" class="overlay clear hidden">
- <h2>En pausa</h2>
+ <h2>Pausa</h2>
  <label class="opt">Volumen <input type="range" id="volRange" min="0" max="1" step="0.05" value="0.7"></label>
  <label class="opt"><input type="checkbox" id="muteChk"> Silenciar</label>
- <label class="opt"><input type="checkbox" id="capChk" checked> Subtítulos para los sonidos</label>
+ <label class="opt"><input type="checkbox" id="capChk" checked> Subtítulos de sonidos</label>
  <label class="opt">Calidad <select id="qualPause"><option value="high">Alta (brillo)</option><option value="low">Baja (más fluida)</option></select></label>
- <div><button class="mag" id="resumeBtn">Continuar</button><button class="mag small" id="restartBtn">Reiniciar aventura</button><button class="mag small" id="menuBtn">Menú principal</button></div>
+ <div><button class="mag" id="resumeBtn">Continuar</button><button class="mag small" id="restartBtn">Reiniciar aventura</button></div>
 </div>
 
 <div id="wish" class="overlay clear hidden">
  <div id="wishBox">
-  <h2>¿Cuál es tu deseo de Halloween, Mysh?</h2>
+  <h2>¿Cuál es tu deseo de Halloween?</h2>
   <input id="wishInput" maxlength="60" placeholder="Susurra tu deseo al agua…" autocomplete="off">
   <div class="chips" id="chips"></div>
   <div><button class="mag" id="wishBtn">✦ Pedir un deseo ✦</button><button class="mag small" id="wishCancel">Todavía no</button></div>
@@ -106,8 +120,8 @@ body.touch h1{font-size:30px}body.touch #hintEl{top:7%;font-size:18px}
 </div>
 
 <div id="finale" class="overlay clear hidden" style="background:none;backdrop-filter:none;pointer-events:none">
- <div id="finMsg">¡Que todos tus deseos de Halloween se cumplan, Mysh!</div>
- <div id="finBtns" style="margin-top:26px;pointer-events:auto"><button class="mag small" id="contBtn">Seguir explorando</button><button class="mag small" id="againBtn">Reiniciar aventura</button><button class="mag small" id="toMenuBtn">Menú principal</button></div>
+ <div id="finMsg">¡Feliz Halloween, Mysh — que todos tus deseos se hagan realidad!</div>
+ <div id="finBtns" style="margin-top:26px;pointer-events:auto"><button class="mag small" id="contBtn">Seguir explorando</button><button class="mag small" id="againBtn">Reiniciar aventura</button></div>
 </div>
 <script type="module">
 import * as THREE from 'three';
@@ -155,9 +169,9 @@ const canvas=$('c');
 let renderer;
 try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'})}
 catch(e1){try{renderer=new THREE.WebGLRenderer({canvas:canvas.cloneNode?canvas:canvas,antialias:false,powerPreference:'default'})}catch(e2){
-  const b=$('startBtn');b.textContent='WebGL está desactivado';b.disabled=true;
+  const b=$('startBtn');b.textContent='WebGL is turned off';b.disabled=true;
   const m=document.createElement('div');m.className='sub';m.style.cssText='max-width:640px;color:#ffb38a;font-size:18px;margin-top:10px';
-  m.innerHTML='Tu navegador no puede crear un contexto 3D (WebGL). Activa la <b>aceleración por hardware</b> (Chrome: Configuración → Sistema → “Usar aceleración de gráficos cuando esté disponible”, y reinicia), actualiza los controladores de gráficos y no abras el archivo dentro de una vista previa aislada: ábrelo directamente en Chrome, Edge o Firefox.';
+  m.innerHTML='Your browser can’t create a 3D (WebGL) context. Turn on <b>hardware acceleration</b> (Chrome: Settings → System → “Use graphics acceleration when available”, then restart), make sure graphics drivers are updated, and avoid opening the file inside a sandboxed preview — open it directly in Chrome, Edge or Firefox.';
   $('menu').appendChild(m);throw e2}}
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();
@@ -425,7 +439,7 @@ function makeSign(x,z,text,rot){
   const tx=ctex(256,128,(c,w,h)=>{noiseFill(c,w,h,'#6a4a30',60,800,3);c.fillStyle='#2a1408';c.font='bold 30px Georgia';c.textAlign='center';c.textBaseline='middle';text.split('\n').forEach((l,i,a)=>c.fillText(l,128,64+(i-(a.length-1)/2)*34))});
   const b=mesh(boxGeo,[mat(0x3a2418),mat(0x3a2418),mat(0x3a2418),mat(0x3a2418),new THREE.MeshLambertMaterial({map:tx}),new THREE.MeshLambertMaterial({map:tx})],0,2.0,0,1.5,.75,.08,g);b.rotation.z=-.08;
   scene.add(g);addCirc(x,z,.15)}
-makeSign(pathX(-14)+2.8,-14,'Hondonada\nLunar →',-.5);makeSign(pathX(-40)-2.9,-40,'¡Cuidado\ncon el arroyo!',.5);makeSign(pathX(-62)-2.9,-62,'Hongos\nbrillantes →',.5);makeSign(pathX(-92)+2.8,-92,'Mansión\nEmbrujada ↓',-.4);
+makeSign(pathX(-14)+2.8,-14,'Hondonada\nLunar →',-.5);makeSign(pathX(-40)-2.9,-40,'¡Cuidado\ncon el río!',.5);makeSign(pathX(-62)-2.9,-62,'Hongos\nbrillantes →',.5);makeSign(pathX(-92)+2.8,-92,'Mansión\nEmbrujada ↓',-.4);
 
 /* owl on its branch */
 const owl=new THREE.Group();
@@ -487,7 +501,7 @@ function updateHand(dt){
 /* interactables */
 const inter=[];let curInter=null;
 function addInter(o){o.on=true;o.cool=0;o.cooldown=o.cooldown??.5;inter.push(o);return o}
-function updateInteractuar(dt){
+function updateInteract(dt){
   for(const o of inter)if(o.cool>0)o.cool-=dt;
   curInter=null;
   if(G.mode!=='walk'||G.ui||G.busy>0||G.paused||!G.playing){setPrompt('');return}
@@ -501,7 +515,7 @@ function updateInteractuar(dt){
   }
   setPrompt(curInter?curInter.label:'');
 }
-function doInteractuar(){
+function doInteract(){
   if(G.mode!=='walk'||!G.playing||G.paused||G.ui||G.busy>0||!curInter)return;
   const o=curInter;o.cool=o.cooldown+1.2;
   if(o.noHand){o.act(o);G.busy=.4}else playHand(()=>o.act(o),o.hand||{});
@@ -514,7 +528,7 @@ function addCharm(x,y,z){
   mesh(new THREE.OctahedronGeometry(1,0),new THREE.MeshBasicMaterial({color:0x9af4ff}),0,0,0,.16,.26,.16,g);
   const s=sprite(0x6af0ff,1.5,.8);g.add(s);scene.add(g);
   const o=addInter({pos:g.position,r:2.4,label:'Recoger el amuleto brillante',hand:{tx:0},
-    act:()=>{o.on=false;g.visible=false;G.charms++;updateCharmHud();burst(g.position,[0x9af4ff,0xffffff,0xb48aff],30,2.4,2,1.6,.25);sfx.chime(1175,g.position);sfx.chime(1568,g.position);hintShow(G.charms===6?'¡Encontraste los seis amuletos estrella! ✦':'Un pequeño amuleto estrella… ✦ '+G.charms+'/6');},
+    act:()=>{o.on=false;g.visible=false;G.charms++;updateCharmHud();burst(g.position,[0x9af4ff,0xffffff,0xb48aff],30,2.4,2,1.6,.25);sfx.chime(1175,g.position);sfx.chime(1568,g.position);hintShow(G.charms===6?'¡Los seis amuletos estrella! ✦':'Un pequeño amuleto estrella… ✦ '+G.charms+'/6');},
     reset:()=>{o.on=true;g.visible=true}});
   charms.push({g,o});return o}
 animators.push((dt,t)=>{for(const c of charms){c.g.rotation.y=t*1.6;c.g.position.y+=Math.sin(t*2.4+c.g.position.x)*.0025}});
@@ -522,7 +536,7 @@ addCharm(pathX(-30)+14,.9,-30);addCharm(pathX(-48)+17,.9,-48);addCharm(pathX(-75
 
 /* forest interactables */
 addInter({pos:new V3(clusterX,1,clusterZ),r:6.5,label:'Tocar los hongos',hand:{tx:-.05},act:touchMushrooms});
-bigPump.forEach((p,i)=>addInter({pos:new V3(p.x,.8,p.z),r:2.8,label:'Inspeccionar la calabaza',act:()=>{bumpPumpkin(p.idx);burst(new V3(p.x,1.6,p.z),[0xff9a2a,0xffd36a],34,2.2,2.2,1.4,.25);sfx.laugh(new V3(p.x,1,p.z));captionShow(pick(['[una calabaza se ríe]','[“¡Ji, ji, ji!”]','[una risita diminuta]']))}}));
+bigPump.forEach((p,i)=>addInter({pos:new V3(p.x,.8,p.z),r:2.8,label:'Examinar la calabaza',act:()=>{bumpPumpkin(p.idx);burst(new V3(p.x,1.6,p.z),[0xff9a2a,0xffd36a],34,2.2,2.2,1.4,.25);sfx.laugh(new V3(p.x,1,p.z));captionShow(pick(['[una calabaza se ríe]','[“¡Ji ji ji!”]','[una risita diminuta]']))}}));
 
 /* dynamic lights */
 const _v=new V3(),_col=new THREE.Color(),LS=30;
@@ -641,7 +655,7 @@ const POND={x:pathX(-27)-12,z:-27};
  const rg=new THREE.InstancedMesh(cylGeo,mat(0x3a5a2a,0x0a2a0a,.7),16),ct=new THREE.InstancedMesh(sphGeo,mat(0x5a3220,0x201008,.8),16);for(let i=0;i<16;i++){const a=rnd()*6.283,r=rr(3.8,4.7),h=rr(1.4,2.2);const x=px+Math.cos(a)*r,z=pz+Math.sin(a)*r;setI(rg,i,x,h/2,z,.025,h,.025,rr(-.15,.15),0,rr(-.15,.15));setI(ct,i,x,h,z,.05,.16,.05)}rg.frustumCulled=ct.frustumCulled=false;scene.add(rg,ct);
  lightCands.push({pos:new V3(px,1.4,pz),color:0x6aa8ff,int:1.3,range:20,steady:true});
  const hs=sprite(0xaab8ff,9,.25);hs.position.set(px,.3,pz);scene.add(hs);
- addInter({pos:new V3(px+(pathX(-27)-px)*.4,.5,pz),r:5.8,label:'Lanzar una piedra al estanque',noHand:true,cooldown:1.2,act:()=>{for(let i=0;i<5;i++)later(i*.18,()=>{const a=-.3,d=1.2+i*.9;burst(new V3(px+2.8-i*1.2,.15,pz+rr(-.4,.4)),[0x9af0ff,0xffffff],10,.9,1.6,.9,.14,2);sfx.chime(700+i*140,new V3(px,.5,pz),.1)});captionShow('[¡plas, plas, plas!]')}})}
+ addInter({pos:new V3(px+(pathX(-27)-px)*.4,.5,pz),r:5.8,label:'Lanzar una piedra al estanque',noHand:true,cooldown:1.2,act:()=>{for(let i=0;i<5;i++)later(i*.18,()=>{const a=-.3,d=1.2+i*.9;burst(new V3(px+2.8-i*1.2,.15,pz+rr(-.4,.4)),[0x9af0ff,0xffffff],10,.9,1.6,.9,.14,2);sfx.chime(700+i*140,new V3(px,.5,pz),.1)});captionShow('[¡plaf, plaf, plaf!]')}})}
 
 /* hollow fairy tree */
 {const hx=pathX(-37)+10.5,hz=-37;const g=new THREE.Group();g.position.set(hx,0,hz);scene.add(g);
@@ -656,7 +670,7 @@ const POND={x:pathX(-27)-12,z:-27};
  for(const [y,z] of[[2.6,.5],[3.7,-.6]]){const w=mesh(new THREE.CircleGeometry(.22,14),new THREE.MeshBasicMaterial({color:0xffd27a}),-1.66,y,z,1,1,1,g);w.rotation.y=-Math.PI/2}
  makeMushroom(hx-2.3,hz+1.1,.8,MC[0]);makeMushroom(hx-2.7,hz-1.0,.7,MC[2]);makeMushroom(hx-2.2,hz-.1,.55,MC[1]);
  addCirc(hx,hz,2.2);lightCands.push({pos:new V3(hx-2.5,1.4,hz),color:0xffa040,int:1.4,range:16});
- addInter({pos:new V3(hx-2.2,1,hz),r:4,label:'Llamar a la puertecita',hand:{dur:1.1},act:()=>{burst(new V3(hx-2,1.1,hz),[0xffd27a,0xff9ad8,0xffffff],34,1.8,1.8,1.5,.2,0);sfx.chime(1319,new V3(hx,1,hz));sfx.chime(1760,new V3(hx,1,hz),.15);captionShow(pick(['[una vocecita: “¡Feliz Halloween!”]','[alguien se ríe dentro del árbol]','[suena una campanita]']));hintShow('La puerta es muy pequeña… pero huele a canela 🎃',3500)}})}
+ addInter({pos:new V3(hx-2.2,1,hz),r:4,label:'Llamar a la puertita',hand:{dur:1.1},act:()=>{burst(new V3(hx-2,1.1,hz),[0xffd27a,0xff9ad8,0xffffff],34,1.8,1.8,1.5,.2,0);sfx.chime(1319,new V3(hx,1,hz));sfx.chime(1760,new V3(hx,1,hz),.15);captionShow(pick(['[una vocecita: “¡Feliz Halloween!”]','[alguien se ríe dentro del árbol]','[tintinea una campanita]']));hintShow('La puerta es muy pequeña… pero huele a canela 🎃',3500)}})}
 
 /* stream & bridge */
 {const sz=-46,bx=pathX(sz);
@@ -679,10 +693,10 @@ const POND={x:pathX(-27)-12,z:-27};
  addCirc(sx,sz,.35);
  for(let i=0;i<4;i++){const hx=sx+rr(-3.5,3.5)+2,hz=sz+rr(1.5,4);const b=mesh(cylGeo,hay,hx,.45,hz,.55,.9,.55,scene);b.rotation.z=Math.PI/2;b.rotation.y=rnd()*3;addCirc(hx,hz,.7);addPumpkin(hx+.2,hz+1,rr(.5,.8),false)}
  lightCands.push({pos:new V3(sx+1,2,sz+1),color:0xffa040,int:1.1,range:14});
- addInter({pos:new V3(sx,1.5,sz),r:4,label:'Saludar al espantapájaros',hand:{dur:1},act:()=>{anim(1.6,k=>{arm.rotation.z=Math.sin(k*Math.PI*6)*.25*(1-k)});burst(new V3(sx,2.4,sz),[0xffd27a,0xff8a2a,0x2a1a3a],26,1.8,1.8,1.5,.2,.4);sfx.laugh(new V3(sx,2,sz));captionShow(pick(['[el espantapájaros se quita el sombrero]','[“¡Bu!” …es broma]','[los cuervos salen volando]']))}})}
+ addInter({pos:new V3(sx,1.5,sz),r:4,label:'Saludar al espantapájaros',hand:{dur:1},act:()=>{anim(1.6,k=>{arm.rotation.z=Math.sin(k*Math.PI*6)*.25*(1-k)});burst(new V3(sx,2.4,sz),[0xffd27a,0xff8a2a,0x2a1a3a],26,1.8,1.8,1.5,.2,.4);sfx.laugh(new V3(sx,2,sz));captionShow(pick(['[el espantapájaros se quita el sombrero]','[“¡Buu!” …es broma]','[los cuervos salen volando]']))}})}
 
 /* graveyard */
-{const gx=pathX(-85)-15,gz=-85;const eps=['Aquí yace Sir Bu — se fue, pero nadie lo olvida','D.E.P. Pedro Calabaza — era un verdadero aplastador','Doña Espanto: “Les dije que estaba enferma… de dulces”','Conde Chuchula — 1666–1666 (demasiado ajo)','Esqueletín Sam — tenía un hueso que roer','Gus el Fantasma — sigue por aquí, la verdad'];
+{const gx=pathX(-85)-15,gz=-85;const eps=['Aquí yace Sir Buu — se fue, pero no lo olvidamos','D.E.P. Pepe Calabaza — era todo un aplastante','Sra. Espanto: “Les dije que estaba harta… de dulces”','Conde Snacula — 1666–1666 (demasiado ajo)','Esqueleto Samuel — tenía un hueso que roer','Gus el Fantasma — sigue por aquí, en realidad'];
  const sm=mat(0x6a6890,0x1e1a40,.7);
  for(let i=0;i<9;i++){const x=gx+(i%3)*3.2-3+rr(-.4,.4),z=gz+Math.floor(i/3)*3-3+rr(-.4,.4),r=rr(-.12,.12);const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rr(-.3,.3)+Math.PI/2*.5;g.rotation.z=r;scene.add(g);
   const t=i%3;if(t===0){rmesh(sm,0,.6,0,.9,1.2,.22,g,.08);const c=mesh(cylGeo,sm,0,1.2,0,.45,.22,.45,g);c.rotation.x=Math.PI/2;c.scale.set(.45,.22,.45)}
@@ -737,6 +751,8 @@ solid(-12.3,-12.1,0,7,-134,-120,darkWood);solid(-7.9,-7.7,0,7,-134,-120,darkWood
 solid(-14,-12.3,5,6.2,-134.2,-133.8,darkWood);
 /* stairs */
 for(let i=0;i<14;i++){const h=(i+1)*5/14;const o=mesh(boxGeo,woodMat,-10,h/2,-120-i-.5,4,h,1,mansion)}
+for(const [sz,sy] of[[-123,2.6],[-129,4.4],[-133,6.4]]){mesh(sphGeo,new THREE.MeshBasicMaterial({color:0xffb050}),-12.0,sy,sz,.14,.2,.14,mansion);const sp=sprite(0xffa040,1.8,.6);sp.position.set(-12.0,sy,sz);mansion.add(sp)}
+lightCands.push({pos:new V3(-10,3.4,-125),color:0xffb060,int:1.8,range:14,on:()=>G.inside},{pos:new V3(-10,7.4,-132),color:0xffb060,int:1.6,range:14,on:()=>G.inside});
 /* doorway (porch) */
 const doorPivot=new THREE.Group();doorPivot.position.set(-1.5,0,-118);mansion.add(doorPivot);
 {const dm=new THREE.MeshLambertMaterial({map:woodTex,color:0xb88860,emissive:0x1a0a04,emissiveIntensity:.7});
@@ -872,7 +888,7 @@ function portrait(x,y,z,ry,variant){
   pl.position.set(-.082,.17,.013);pr.position.set(.082,.17,.013);
   const p={g,pl,pr,blink:0,sway:0,x,y,z};portraits.push(p);
   const wp=new V3(x+Math.sin(ry)*1.2,y,z+Math.cos(ry)*1.2);
-  addInter({pos:new V3(x,1.5,z),r:3,label:'Saludar al retrato',act:()=>{p.blink=1;p.sway=1;sfx.whisper(new V3(x,y,z));captionShow(pick(['[el retrato se ríe entre dientes]','[“Bienvenido, querido invitado…”]','[el retrato guiña un ojo]']))}});
+  addInter({pos:new V3(x,1.5,z),r:3,label:'Saludar al retrato',act:()=>{p.blink=1;p.sway=1;sfx.whisper(new V3(x,y,z));captionShow(pick(['[el retrato se ríe]','[“Bienvenida, querida invitada…”]','[el retrato te guiña un ojo]']))}});
 }
 portrait(1.7,2.5,-137,-Math.PI/2,0);portrait(1.7,2.5,-131.5,-Math.PI/2,1);portrait(-5.2,2.6,-118.5,Math.PI,2);portrait(-3,3.9,-140.6,0,1);portrait(-6.2,2.6,-140.6,0,0);
 animators.push((dt,t)=>{const _l=new V3();for(const p of portraits){p.g.worldToLocal(_l.set(player.x,player.y+1.6,player.z));
@@ -922,12 +938,13 @@ animators.push((dt,t)=>{
 lightCands.push({pos:new V3(CAUL.x,1.9,CAUL.z),color:()=>potion.hex,int:1,range:16,dyn:()=>.9+potion.glow*1.2,steady:true,on:()=>G.inside});
 let ingI=0;const INGS=[['pétalos de luna',1],['seda de araña',2],['bayas brillantes',3],['escama de dragón',4]];
 addInter({pos:new V3(CAUL.x,1.4,CAUL.z),r:2.8,label:'Remover la poción',act:()=>{potion.stir=1;potion.glow=2.4;sfx.bubble(new V3(CAUL.x,1.5,CAUL.z),8);sfx.chime(880,new V3(CAUL.x,1.5,CAUL.z));
-  for(let i=0;i<8;i++)later(i*.18,()=>burst(new V3(CAUL.x+rr(-.6,.6),1.5,CAUL.z+rr(-.6,.6)),[potion.hex,0xffffff],10,1.4,2.4,1.2,.2,2));captionShow('[la poción burbujea y centellea]')},hand:{up:false,dur:1.6}});
+  for(let i=0;i<8;i++)later(i*.18,()=>burst(new V3(CAUL.x+rr(-.6,.6),1.5,CAUL.z+rr(-.6,.6)),[potion.hex,0xffffff],10,1.4,2.4,1.2,.2,2));captionShow('[la poción burbujea y brilla]')},hand:{up:false,dur:1.6}});
 addInter({pos:new V3(CAUL.x,1.2,-139.4),r:3.4,label:'Añadir un ingrediente',act:()=>{const [n,c]=INGS[ingI++%INGS.length];potion.ci=c;potion.glow=2;burst(new V3(CAUL.x,2.4,CAUL.z),PCOL[c],36,2,2.6,1.4,.22,2.5);sfx.bubble(new V3(CAUL.x,1.5,CAUL.z),4);sfx.chime(520+c*90,new V3(CAUL.x,1.5,CAUL.z));hintShow('Añades '+n+'… la poción cambia de color')},avail:()=>true});
 /* ---------- attic & balcony ---------- */
 {const tr=(x,z,w,d)=>{solid(x-w/2,x+w/2,5,5.9,z-d/2,z+d/2,darkWood);mesh(boxGeo,mat(0x4a3020,0x1a0c06,.8),x,5.95,z,w,.12,d,mansion);mesh(boxGeo,goldM,x,5.8,z-d/2-.02,.2,.2,.05,mansion)};
  tr(-12.6,-139.3,2,1.2);tr(-6.4,-139.8,1.4,.9);tr(-4,-136.5,1.6,1.0);
- {const cx=-3.0,cz=-139.2,cy=5.0;rmesh(velvetMat,cx,cy+.3,cz,1.1,.4,1.0,mansion,.14);rmesh(velvetMat,cx,cy+.85,cz-.42,1.1,.9,.26,mansion,.13);for(const s of[-1,1])rmesh(velvetMat,cx+s*.52,cy+.55,cz,.2,.5,1.0,mansion,.09);for(const s of[-1,1])for(const t of[-1,1])mesh(sphGeo,darkWood,cx+s*.45,cy+.06,cz+t*.4,.07,.1,.07,mansion);addCirc(cx,cz,.8)}
+ const sheet=new THREE.MeshLambertMaterial({color:0xd8d8e8,emissive:0x3a3a5a,emissiveIntensity:.7,transparent:true,opacity:.92});
+ rmesh(velvetMat,-9,5.35,-136.5,1.3,.55,1.2,mansion,.12);rmesh(velvetMat,-9,5.95,-137.0,1.3,1.0,.3,mansion,.12);for(const s of[-1,1])rmesh(velvetMat,-9+s*.6,5.65,-136.5,.22,.5,1.2,mansion,.08);addCirc(-9,-136.5,.8);
  solid(-13.7,-12.7,5,7,-136,-133.4,darkWood);// dresser
  for(let i=0;i<4;i++)mesh(boxGeo,darkWood,-8,9.5,-141+i*2.2+.4,10,.3,.3,mansion).visible=false;
  for(let i=0;i<5;i++)mesh(boxGeo,darkWood,-8-i*1.2,9.6,-137.5,.35,.35,7.6,mansion);
@@ -954,16 +971,16 @@ const broomProp=new THREE.Group();broomProp.position.set(-8,5.05,-143.9);mansion
 addInter({pos:new V3(-8,5.7,-143.6),r:3.2,label:'Tomar la escoba',hand:{dur:1.4},cooldown:3,act:()=>startFlight()});
 /* mansion door interaction */
 addInter({pos:new V3(0,1.6,-116.2),r:3.3,label:'Abrir la puerta',avail:()=>!G.doorOpen,hand:{dur:1.2},act:()=>{
-  G.doorOpen=true;doorBox.on=false;sfx.creak();captionShow('[la puerta rechina al abrirse]');
+  G.doorOpen=true;doorBox.on=false;sfx.creak();captionShow('[la puerta se abre con un crujido]');
   anim(2.6,k=>{const e=k*k*(3-2*k);doorPivot.rotation.y=e*1.95;spillMat.opacity=e*.85});
   later(.5,()=>{for(let i=0;i<30;i++)emit(rr(-1.2,1.2),rr(.4,3),-117.5+rr(-1.5,1.5),rr(-.05,.05),rr(.02,.1),rr(-.05,.05),rr(3,5),0xffd27a,.05,0)});
-  hintShow('Una luz cálida se derrama… pasa adentro')}});
+  hintShow('Una luz cálida se asoma… entra')}});
 function resetMansion(){G.doorOpen=false;doorBox.on=true;doorPivot.rotation.y=0;spillMat.opacity=0;broomProp.visible=true;potion.ci=0;potion.glow=.6;
   lightCands.forEach(c=>{});}
 lightCands.push({pos:new V3(0,2.2,-117.2),color:0xffa040,int:2.2,range:16,on:()=>G.doorOpen});
 /* portrait / whisper ambience handled in audio */
 /* ================= flight, town, candy ================= */
-const tbState={up:false,dn:false,boost:false};
+const tbState={up:false,dn:false};
 const FL={vel:new V3(),roll:0,takeoff:0,landing:false,hover:false,tHint:0,guided:false};
 const LAND={x:0,z:-538};
 /* first-person broom + hands */
@@ -980,12 +997,12 @@ function startFlight(){
   for(let i=0;i<46;i++){const a=i/46*6.283*2,r=.8+i*.025;emit(cp.x+Math.cos(a)*r,cp.y-.4+i*.03,cp.z+Math.sin(a)*r,0,.5,0,1.6,i%2?0xffd27a:0xfff0b0,.2,0)}
   sfx.lift();captionShow('[un zumbido mágico y brillante]');
   const y0=broomProp.position.y;anim(1.2,k=>{broomProp.position.y=y0+Math.sin(k*1.5)*.5});
-  hintShow(touchMode?'Empuja el stick hacia adelante para volar · arrastra para dirigir · ▲▼ subir/bajar · ⚡ impulso · ✈ vuelo automático':'Mantén W para volar (Shift = impulso) · el ratón dirige · Espacio sube · C baja · F vuelo automático',8000);
+  hintShow(touchMode?'Empuja el joystick para volar — mantenlo para ir más rápido · arrastra para girar · ▲ ▼ subir y bajar':'Mantén W para volar — cuanto más tiempo, más rápido · el ratón gira · Espacio sube · C baja · F vuelo automático',8000);
   later(1.25,()=>{
-    G.mode='fly';FL.takeoff=2.0;FL.hover=false;FL.landing=false;FL.auto=false;FL.guided=false;FL.tHint=0;
+    G.mode='fly';FL.surge=0;FL.takeoff=3.4;FL.hover=false;FL.landing=false;FL.auto=false;FL.guided=false;FL.tHint=0;
     player.x=-8;player.z=-143.3;player.y=5+1.7;player.pitch=.12;player.yaw=0;player.vel.set(0,0,0);FL.vel.set(0,4,-5);
     broomProp.visible=false;broomCam.visible=true;hand.visible=false;H.t=-1;
-    $('flyEl').style.opacity=1;$('flyEl').textContent='Mantén W volar · ratón dirige · Espacio/C subir/bajar · E dulces · F auto';
+    $('flyEl').style.opacity=1;$('flyEl').textContent=touchMode?'Joystick: volar · arrastra: girar · E: dulces · Auto':'W: volar (más rápido si mantienes) · ratón: girar · Espacio/C: subir/bajar · E: dulces · F: automático';
     sfx.takeoff();
   });
 }
@@ -1000,11 +1017,11 @@ function flyFloor(x,z){
   if(z<-210&&z>-480&&nearestKid(x,z)<40)f=7.5;
   return f}
 function startLanding(){
-  FL.landing=true;const from=new V3(player.x,player.y,player.z);hintShow('Un suave descenso al patio iluminado por la luna…',5000);captionShow('[la escoba frena, zumbando suavemente]');
+  FL.landing=true;const from=new V3(player.x,player.y,player.z);hintShow('Un suave descenso al patio iluminado por la luna…',5000);captionShow('[la escoba frena, zumbando suave]');
   anim(5.5,k=>{const e=k*k*(3-2*k);player.x=lerp(from.x,LAND.x,e);player.z=lerp(from.z,LAND.z,e);player.y=lerp(from.y,1.7,e);player.yaw=damp(player.yaw,0,1.6,.016);player.pitch=damp(player.pitch,-.12,1.6,.016);
       if(rnd()<.6)emit(player.x+rr(-.5,.5),player.y-.7,player.z+rr(-.5,.5),rr(-.2,.2),rr(-.4,.2),rr(-.2,.2),1.4,0xffd27a,.14,0)},
    ()=>{G.mode='walk';G.landed=true;FL.landing=false;player.y=0;player.vy=0;player.vel.set(0,0,0);broomCam.visible=false;$('flyEl').style.opacity=0;
-     burst(new V3(player.x,.6,player.z),[0xffd27a,0xfff0b0,0xb48aff],50,2.4,1.4,2,.2,0);sfx.land();hintShow('Camina hasta el pozo brillante…',6000)});
+     burst(new V3(player.x,.6,player.z),[0xffd27a,0xfff0b0,0xb48aff],50,2.4,1.4,2,.2,0);sfx.land();hintShow('Camina hacia el pozo brillante…',6000)});
 }
 function updateFlight(dt,t){
   if(G.mode!=='fly')return;
@@ -1013,30 +1030,30 @@ function updateFlight(dt,t){
   const fwdIn=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0)+joy.y;
   const strIn=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joy.x;
   const upIn=(keys.Space||tbState.up?1:0)-(keys.ControlLeft||keys.ControlRight||keys.KeyC||tbState.dn?1:0);
-  const boost=keys.ShiftLeft||keys.ShiftRight||tbState.boost?1:0;
-  if(FL.auto&&(fwdIn||strIn||upIn)){FL.auto=false;hintShow('Tú tienes el control',2000)}
+  const boost=keys.ShiftLeft||keys.ShiftRight?1:0;
+  if(FL.auto&&(fwdIn||strIn||upIn)){FL.auto=false;hintShow('Tienes el control',2000)}
   const kd=nearestKid(player.x,player.z);const slow=kd<40?clamp(kd/40,.5,1):1;
-  let spd=fwdIn>0?17*fwdIn:(fwdIn<0?5:0);if(boost)spd*=2.1;spd*=slow;
+  FL.surge=damp(FL.surge||0,fwdIn>.2?1:0,fwdIn>.2?.55:3,dt);
+  let spd=fwdIn>0?8.5*fwdIn*(1+FL.surge*2.6):(fwdIn<0?3.5:0);if(boost)spd*=1.7;spd*=slow;
   const tx=-sy*cp*spd+cy*strIn*5*Math.max(.35,slow),ty=sp*spd+upIn*7,tz=-cy*cp*spd-sy*strIn*5*Math.max(.35,slow);
-  if(FL.takeoff>0){FL.takeoff-=dt;const w=0;FL.vel.y+=0;}
-  let tv=FL.takeoff>0?{x:tx,y:Math.max(ty,5*(FL.takeoff/3.4)),z:tz-4*(FL.takeoff/3.4)}:{x:tx,y:ty,z:tz};
+  if(FL.takeoff>0){FL.takeoff-=dt;const w=Math.max(0,FL.takeoff/3.4);FL.vel.y+=0;}
+  let tv=FL.takeoff>0?{x:tx*.7,y:Math.max(ty,5*(FL.takeoff/3.4)),z:tz*.7-4*(FL.takeoff/3.4)}:{x:tx,y:ty,z:tz};
   if(FL.auto&&FL.takeoff<=0){const dx=LAND.x-player.x,dz=LAND.z-player.z,d=Math.hypot(dx,dz)||1;tv={x:dx/d*24,y:clamp((36-player.y)*.6,-6,8),z:dz/d*24}}
-  const ac=3.4;FL.vel.x=damp(FL.vel.x,tv.x,ac,dt);FL.vel.y=damp(FL.vel.y,tv.y,ac,dt);FL.vel.z=damp(FL.vel.z,tv.z,ac,dt);
+  FL.vel.x=damp(FL.vel.x,tv.x,2.2,dt);FL.vel.y=damp(FL.vel.y,tv.y,2.2,dt);FL.vel.z=damp(FL.vel.z,tv.z,2.2,dt);
   player.x+=FL.vel.x*dt;player.y+=FL.vel.y*dt;player.z+=FL.vel.z*dt;
   const floor=flyFloor(player.x,player.z);
   if(player.y<floor){player.y=damp(player.y,floor,6,dt);if(FL.vel.y<0)FL.vel.y=0}
   player.y=Math.min(player.y,170);player.x=clamp(player.x,-420,420);player.z=clamp(player.z,-740,60);
   FL.roll=damp(FL.roll,-strIn*.16,3,dt);
   const speed=FL.vel.length();player.speed=speed;
-  camera.fov=damp(camera.fov,70+Math.min(speed,36)*.7,4,dt);camera.updateProjectionMatrix();
-  {const sp=Math.round(speed*3.6);if(sp!==FL._sp){FL._sp=sp;if(!FL.landing&&!FL.auto)$('flyEl').textContent='Velocidad '+sp+' · mantén W / ▲ para volar · Shift / ⚡ impulso · F auto'}}
+  camera.fov=damp(camera.fov,70+Math.min(speed,45)*.6,3,dt);camera.updateProjectionMatrix();
   // golden trail
   if(speed>2){for(let i=0;i<2;i++)emit(player.x-(-sy*cp)*1.3+rr(-.15,.15),player.y-.7+rr(-.1,.1),player.z-(-cy*cp)*1.3+rr(-.15,.15),-FL.vel.x*.1+rr(-.3,.3),rr(-.2,.1),-FL.vel.z*.1+rr(-.3,.3),1.3,rnd()<.7?0xffd27a:0xfff0b0,.13,0)}
   broomCam.position.y=Math.sin(t*2.1)*.012;
   broomCam.rotation.z=damp(broomCam.rotation.z,-FL.roll*.5,4,dt);
   // guidance + landing
   const hd=Math.hypot(player.x-LAND.x,player.z-LAND.z);
-  if(!FL.guided&&(player.z<-300||(G.time-FL.tHint>60&&FL.tHint>0))){FL.guided=true;hintShow('Sigue el rayo de luna violeta — o pulsa F para volar solo al patio',7000)}
+  if(!FL.guided&&(player.z<-300||(G.time-FL.tHint>60&&FL.tHint>0))){FL.guided=true;hintShow(touchMode?'Sigue el rayo de luna violeta — o toca Auto':'Sigue el rayo de luna violeta — o pulsa F para ir automáticamente al patio',7000)}
   if(!FL.landing&&hd<38&&player.y<75&&!FL.hover)startLanding();
 }
 /* guiding moonbeam over the courtyard */
@@ -1180,7 +1197,7 @@ function doDrop(){
   for(let i=0;i<8;i++){const c=candy[cIdx++%CMAX];c.on=true;c.bounced=false;c.p.set(player.x+fx*1.6+rr(-.5,.5),player.y-.5+rr(-.2,.2),player.z+fz*1.6+rr(-.5,.5));c.v.set(FL.vel.x*.4+fx*1.2+rr(-2.4,2.4),rr(.5,2.4),FL.vel.z*.4+fz*1.2+rr(-2.4,2.4))}
   burst(new V3(player.x+fx*1.6,player.y-.5,player.z+fz*1.6),[0xff4a8a,0x4aeaff,0xffd24a,0x8aff4a,0xffffff],34,2.4,1,1.4,.28,0);sfx.drop();captionShow('[llueven dulces]');
 }
-function updateCandyHud(){const e=$('candyEl');e.textContent='🍬 dulces lanzados: '+G.drops+'  ·  niños felices: '+G.smiles;e.style.opacity=1}
+function updateCandyHud(){const e=$('candyEl');e.textContent='🍬 lluvias de dulces: '+G.drops+'  ·  niños felices: '+G.smiles;e.style.opacity=1}
 function updateCandy(dt,t){
   dropCool-=dt;let dirty=false;
   for(let i=0;i<CMAX;i++){const c=candy[i];if(!c.on)continue;dirty=true;
@@ -1281,7 +1298,7 @@ function wishSprite(text){
 function grantWish(text){
   closeWish();G.wishDone=true;
   playHand(()=>{
-    const well=new V3(CT.x,1.2,CT.z);sfx.flourish();captionShow('[una campanilla brillante que asciende]');
+    const well=new V3(CT.x,1.2,CT.z);sfx.flourish();captionShow('[un destello musical ascendente]');
     anim(4.2,k=>{G.wishPower=Math.max(G.wishPower,k)});
     // orb
     const orb=new THREE.Group();orb.position.copy(well);scene.add(orb);mesh(sphGeo,new THREE.MeshBasicMaterial({color:0xfff2c0}),0,0,0,.34,.34,.34,orb);const os=sprite(0xffe0a0,3,.9);orb.add(os);wishFX.orb=orb;
@@ -1355,8 +1372,8 @@ function updateAmbience(dt,t){
   tgt(amb.music,G.playing&&!G.paused?(fly?.12:court?0:.07):0,1);
   ambT-=dt;if(ambT<=0&&G.playing&&!G.paused){ambT=rr(5,11);
     if(fly)sfx.whoosh();else if(court)sfx.chime(pick([1047,1319,1568]),null,.25);
-    else if(inn){if(rnd()<.5)sfx.creakSoft();else{sfx.whisper(null);captionShow('[un susurro lejano]')}}
-    else{const r=rnd();if(r<.45){sfx.owl();captionShow('[un búho ulula a lo lejos]')}else if(r<.75)sfx.wind();else if(G.chapter>=2&&r<.9){sfx.thunder();captionShow('[truenos lejanos]')}else sfx.chime(pick([1047,1319]),null,.2)}}
+    else if(inn){if(rnd()<.5)sfx.creakSoft();else{sfx.whisper(null);captionShow('[un susurro tenue]')}}
+    else{const r=rnd();if(r<.45){sfx.owl();captionShow('[un búho ulula a lo lejos]')}else if(r<.75)sfx.wind();else if(G.chapter>=2&&r<.9){sfx.thunder();captionShow('[un trueno lejano]')}else sfx.chime(pick([1047,1319]),null,.2)}}
 }
 /* panning helper: positional gain based on listener */
 function spatial(pos,v=1){if(!pos||!AC)return v;const d=Math.hypot(pos.x-player.x,pos.y-player.y,pos.z-player.z);return v*clamp(1.2-d/18,.08,1)}
@@ -1373,7 +1390,7 @@ const sfx={
   whisper(pos){if(!AC)return;noiseHit(1.2,{freq:3400,q:5,vol:spatial(pos,.12)});noiseHit(1.0,{freq:2200,q:6,vol:spatial(pos,.08),delay:.2})},
   bubble(pos,n=6){if(!AC)return;for(let i=0;i<n;i++)tone(180+Math.random()*320,0,.12,{vol:spatial(pos,.2),slide:1.8,delay:i*.09})},
   creak(){if(!AC)return;tone(95,0,2.4,{type:'sawtooth',vol:.08,slide:1.5});tone(142,0,2.4,{type:'sawtooth',vol:.05,slide:.8,delay:.1});noiseHit(2.2,{freq:700,q:9,vol:.05,sweep:.5})},
-  creakSoft(){if(!AC)return;tone(120,0,.9,{type:'sawtooth',vol:.03,slide:1.3});captionShow('[la madera cruje]')},
+  creakSoft(){if(!AC)return;tone(120,0,.9,{type:'sawtooth',vol:.03,slide:1.3});captionShow('[cruje la madera]')},
   lift(){if(!AC)return;[392,523,659,784].forEach((f,i)=>tone(f,0,1.4,{vol:.14,delay:i*.12}))},
   takeoff(){if(!AC)return;noiseHit(2.6,{freq:300,q:.8,vol:.3,sweep:5});[523,659,784,1047,1319].forEach((f,i)=>tone(f,0,1.2,{vol:.13,delay:i*.1}))},
   whoosh(){if(!AC)return;noiseHit(1.8,{freq:500,q:1.2,vol:.1,sweep:3})},
@@ -1435,42 +1452,35 @@ addEventListener('keydown',e=>{
   keys[e.code]=true;
   if(!G.playing||G.paused||G.ui)return;
   if(['Space','ArrowUp','ArrowDown','ControlLeft'].includes(e.code))e.preventDefault();
-  if(e.code==='KeyE'&&!e.repeat){if(G.mode==='fly')doDrop();else doInteractuar()}
-  if(e.code==='KeyF'&&G.mode==='fly'&&!FL.landing&&!e.repeat){FL.auto=!FL.auto;hintShow(FL.auto?'Volando solo al patio · pulsa cualquier tecla de movimiento para retomar el control':'Tú tienes el control',3500)}
+  if(e.code==='KeyE'&&!e.repeat){if(G.mode==='fly')doDrop();else doInteract()}
+  if(e.code==='KeyF'&&G.mode==='fly'&&!FL.landing&&!e.repeat){FL.auto=!FL.auto;hintShow(FL.auto?'Vuelo automático al patio · pulsa cualquier tecla para retomar el control':'Tienes el control',3500)}
 });
 addEventListener('keyup',e=>{keys[e.code]=false});
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false});
 canvas.addEventListener('mousedown',e=>{
   if(!G.playing||G.paused||G.ui)return;
   if(!touchMode&&document.pointerLockElement!==canvas){requestLock();return}
-  if(e.button===0){if(G.mode==='fly')doDrop();else doInteractuar()}
+  if(e.button===0){if(G.mode==='fly')doDrop();else doInteract()}
 });
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 /* touch */
 if(touchMode){
-  document.body.classList.add('touch');$('touch').style.display='block';
-  const joyEl=$('joy'),knob=$('joyKnob');let jid=null,jc={x:0,y:0},lid=null,lp={x:0,y:0},tapT=0,tapP=null;
-  const R=62;
-  const setJoy=t=>{let dx=(t.clientX-jc.x)/R,dy=(t.clientY-jc.y)/R;const l=Math.hypot(dx,dy);if(l>1){dx/=l;dy/=l}joy.x=dx;joy.y=-dy;knob.style.transform=`translate(${dx*46}px,${dy*46}px)`};
-  joyEl.addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();const t=e.changedTouches[0];jid=t.identifier;const r=joyEl.getBoundingClientRect();jc={x:r.left+r.width/2,y:r.top+r.height/2};setJoy(t)},{passive:false});
+  $('touch').style.display='block';
+  const joyEl=$('joy'),knob=$('joyKnob');let jid=null,jc={x:0,y:0},lid=null,lp={x:0,y:0};
+  joyEl.addEventListener('touchstart',e=>{e.preventDefault();const t=e.changedTouches[0];jid=t.identifier;const r=joyEl.getBoundingClientRect();jc={x:r.left+r.width/2,y:r.top+r.height/2}},{passive:false});
   addEventListener('touchmove',e=>{for(const t of e.changedTouches){
-    if(t.identifier===jid){setJoy(t);e.preventDefault()}
-    else if(t.identifier===lid){look(t.clientX-lp.x,t.clientY-lp.y,.0055);lp={x:t.clientX,y:t.clientY};e.preventDefault()}}},{passive:false});
+    if(t.identifier===jid){let dx=(t.clientX-jc.x)/50,dy=(t.clientY-jc.y)/50;const l=Math.hypot(dx,dy);if(l>1){dx/=l;dy/=l}joy.x=dx;joy.y=-dy;knob.style.transform=`translate(${dx*34}px,${dy*34}px)`}
+    else if(t.identifier===lid){look(t.clientX-lp.x,t.clientY-lp.y,.005);lp={x:t.clientX,y:t.clientY}}}},{passive:false});
   const endT=e=>{for(const t of e.changedTouches){if(t.identifier===jid){jid=null;joy={x:0,y:0};knob.style.transform=''}if(t.identifier===lid)lid=null}};addEventListener('touchend',endT);addEventListener('touchcancel',endT);
   canvas.addEventListener('touchstart',e=>{if(!G.playing||G.paused||G.ui)return;const t=e.changedTouches[0];if(lid===null){lid=t.identifier;lp={x:t.clientX,y:t.clientY}}},{passive:true});
-  const act=()=>{if(G.mode==='fly')doDrop();else doInteractuar()};
-  const press=(id,fn)=>$(id).addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();fn()},{passive:false});
-  press('tbE',act);press('tbPause',()=>{if(G.ui)closeWish();else pauseGame()});press('tbAuto',()=>{if(G.mode==='fly'&&!FL.landing){FL.auto=!FL.auto;hintShow(FL.auto?'Volando solo al patio · mueve el stick para retomar el control':'Tú tienes el control',3000)}});
-  const hold=(id,on,off)=>{const el=$(id);el.addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();on()},{passive:false});el.addEventListener('touchend',e=>{e.preventDefault();off()},{passive:false});el.addEventListener('touchcancel',off)};
-  hold('tbUp',()=>tbState.up=true,()=>tbState.up=false);hold('tbDn',()=>tbState.dn=true,()=>tbState.dn=false);
-  hold('tbBoost',()=>tbState.boost=true,()=>tbState.boost=false);hold('tbJump',()=>keys.Space=true,()=>keys.Space=false);
+  const act=()=>{if(G.mode==='fly')doDrop();else doInteract()};
+  $('tbE').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();act()},{passive:false});
+  const hold=(id,k)=>{const el=$(id);el.addEventListener('touchstart',e=>{e.preventDefault();tbState[k]=true;if(k==='up'&&G.mode==='walk')keys.Space=true},{passive:false});const off=()=>{tbState[k]=false;if(k==='up')keys.Space=false};el.addEventListener('touchend',off);el.addEventListener('touchcancel',off)};hold('tbUp','up');hold('tbDn','dn');
+  $('tbF').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();if(G.mode==='fly'&&!FL.landing&&G.playing&&!G.paused){FL.auto=!FL.auto;hintShow(FL.auto?'Vuelo automático al patio · toca el joystick para retomar el control':'Tienes el control',3500)}},{passive:false});
+  $('tbP').addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();if(G.playing)pauseGame()},{passive:false});
+  promptEl.style.pointerEvents='auto';promptEl.addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();act()},{passive:false});
   G.dragLook=true;
 }
-let _tm='';
-function updateTouchUI(){
-  if(!touchMode)return;const fly=G.mode==='fly';const tag=fly?'f':'w';
-  if(tag!==_tm){_tm=tag;for(const id of['tbUp','tbDn','tbBoost','tbAuto'])$(id).classList.toggle('hide',!fly);$('tbJump').classList.toggle('hide',fly)}
-  const ready=fly?(nearKids()&&!FL.landing):!!curInter;$('tbE').classList.toggle('ready',ready);$('tbE').textContent=fly?'🍬':'✋'}
 /* ================= flow: start / pause / restart ================= */
 function pauseGame(){if(!G.playing||G.paused)return;G.paused=true;$('pause').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();if(AC&&AC.state==='running')AC.suspend();setPrompt('')}
 function resumeGame(){G.paused=false;$('pause').classList.add('hidden');if(AC)AC.resume();requestLock()}
@@ -1483,21 +1493,20 @@ function resetWorld(){
   for(let i=0;i<MAXP;i++){pLife[i]=0}camera.rotation.set(0,0,0);
 }
 function beginAdventure(){
-  if(touchMode){try{const el=document.documentElement;(el.requestFullscreen||el.webkitRequestFullscreen||(()=>{})).call(el);screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}}
   G.starting=true;initAudio();if(AC)AC.resume();
   resetWorld();$('menu').classList.add('hidden');$('pause').classList.add('hidden');
   G.playing=true;G.paused=false;requestLock();setTimeout(()=>G.starting=false,400);
-  setChapter(1,'El Bosque Encantado');hintShow('¡Mysh, tu aventura comienza! 🎃',3500);
-  later(4,()=>hintShow(touchMode?'Stick izquierdo para moverte · arrastra la pantalla para mirar · toca ✋ para interactuar':'Cruza el arco · WASD para moverte · ratón para mirar · Shift para correr',7000));
+  setChapter(1,'El Bosque Encantado');
+  later(1.2,()=>hintShow(touchMode?'Usa el joystick para caminar · arrastra para mirar · toca E para interactuar':'Cruza el arco · WASD para moverte · ratón para mirar · Shift para correr · E para interactuar',7000));
   later(9,()=>hintShow('Las calabazas brillantes marcan el camino… escucha las campanillas',5000));
 }
 $('startBtn').onclick=beginAdventure;
 $('resumeBtn').onclick=resumeGame;
 $('restartBtn').onclick=()=>{$('pause').classList.add('hidden');beginAdventure()};
 $('againBtn').onclick=()=>beginAdventure();
-$('menuBtn').onclick=toMenu;$('toMenuBtn').onclick=toMenu;
+
 $('contBtn').onclick=()=>{$('finale').classList.add('hidden');requestLock()};
-function toMenu(){G.playing=false;G.paused=false;$('pause').classList.add('hidden');$('finale').classList.add('hidden');$('menu').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();if(AC)AC.resume();$('startBtn').textContent='Comenzar la aventura'}
+function toMenu(){G.playing=false;G.paused=false;$('pause').classList.add('hidden');$('finale').classList.add('hidden');$('menu').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();if(AC)AC.resume();$('startBtn').textContent='Comenzar aventura'}
 $('volRange').oninput=e=>{audio.vol=+e.target.value;setVol()};
 $('muteChk').onchange=e=>{audio.mute=e.target.checked;setVol()};
 $('capChk').onchange=e=>{audio.caps=e.target.checked;if(!audio.caps)capEl.style.opacity=0};
@@ -1511,13 +1520,14 @@ function frame(now){
   if(G.paused){renderOnly();return}
   G.time+=dt;const t=G.time;
   // adaptive quality
-  fpsAcc+=dt;fpsN++;if(fpsAcc>3){const fps=fpsN/fpsAcc;fpsAcc=0;fpsN=0;if(fps<24&&G.quality==='high'&&G.playing){applyQuality('low');hintShow('Calidad baja activada para jugar con más fluidez',3000)}}
-  if(G.playing){updatePlayer(dt);updateFlight(dt,t);updateInteractuar(dt);updateCandy(dt,t);chapterCheck();
-    if(G.mode==='fly'&&!FL.landing&&nearKids()&&!G.paused){setPrompt(touchMode?'Toca 🍬 para soltar dulces':'[E / Clic] ¿Soltar dulces?')}else if(G.mode==='fly')setPrompt('');
-    if(G.mode==='fly'&&G.drops===0&&nearKids()&&FL.tHint===0){FL.tHint=G.time;hintShow(touchMode?'¡Niños abajo! Suelta el stick para flotar y toca 🍬':'¡Niños abajo! Suelta W para flotar y pulsa E o haz clic para soltar dulces',7000)}
-    if(G.mode==='fly'&&G.drops>=2&&!FL.guided){FL.guided=true;hintShow(touchMode?'¡Qué bien! Empuja el stick y sigue el rayo violeta — o toca ✈ para volar solo':'¡Qué bien! Mantén W y sigue el rayo violeta — o pulsa F para volar solo al patio',8000)}
+  fpsAcc+=dt;fpsN++;if(fpsAcc>3){const fps=fpsN/fpsAcc;fpsAcc=0;fpsN=0;if(fps<24&&G.quality==='high'&&G.playing){applyQuality('low');hintShow('Calidad baja activada para que fluya mejor',3000)}}
+  if(G.playing){updatePlayer(dt);updateFlight(dt,t);updateInteract(dt);updateCandy(dt,t);chapterCheck();
+    if(G.mode==='fly'&&!FL.landing&&nearKids()&&!G.paused){setPrompt(touchMode?'¿Soltar dulces?':'[E / Clic] ¿Soltar dulces?')}else if(G.mode==='fly')setPrompt('');
+    if(G.mode==='fly'&&G.drops===0&&nearKids()&&FL.tHint===0){FL.tHint=G.time;hintShow(touchMode?'¡Niños abajo! Suelta el joystick para flotar y toca E para soltar dulces':'¡Niños abajo! Suelta W para flotar y pulsa E o haz clic para soltar dulces',7000)}
+    if(G.mode==='fly'&&G.drops>=2&&!FL.guided){FL.guided=true;hintShow(touchMode?'¡Precioso! Vuela hacia el rayo violeta — o toca Auto':'¡Precioso! Mantén W y sigue el rayo violeta — o pulsa F para ir automáticamente al patio',8000)}
   }
-  updateTouchUI();updateHand(dt);updateTweens(dt);
+  updateHand(dt);updateTweens(dt);
+  if(touchMode){const f=G.mode==='fly'&&G.playing;$('tbF').style.display=f?'flex':'none';$('tbDn').style.display=f?'flex':'none'}
   for(const a of animators)a(dt,t);
   updateLights(dt,t);updateParticles(dt);updateAtmosphere(dt);updateAmbience(dt,t);
   // camera
@@ -1531,14 +1541,28 @@ function frame(now){
   renderOnly();
 }
 function renderOnly(){if(G.quality==='high'&&composer)composer.render();else renderer.render(scene,camera)}
+/* ================= candle intro for Mysh ================= */
+(function(){
+ const intro=$('intro');if(!intro)return;let lit=false;
+ function light(){
+  if(lit)return;lit=true;
+  try{initAudio();if(AC)AC.resume()}catch(e){}
+  intro.classList.add('lit');
+  [[0,523],[350,659],[700,784],[1100,1047],[1800,1319]].forEach(([ms,f])=>setTimeout(()=>{if(AC)sfx.chime(f,null,.2)},ms));
+  setTimeout(()=>intro.classList.add('name'),1700);
+  setTimeout(()=>{intro.classList.add('done');beginAdventure()},6200);
+ }
+ intro.addEventListener('pointerdown',e=>{e.preventDefault();light()});
+ addEventListener('keydown',e=>{if(!lit&&!G.playing&&(e.code==='Space'||e.code==='Enter'))light()});
+})();
 /* ================= boot ================= */
 function boot(){
   buildTrees();buildPumpkins();
   applyQuality(matchMedia('(pointer:coarse)').matches?'low':'high');
   camera.position.set(START.x,eyeH,START.z);
-  $('startBtn').disabled=false;$('startBtn').textContent='Comenzar la aventura';
+  $('startBtn').disabled=false;$('startBtn').textContent='Comenzar aventura';
   requestAnimationFrame(t=>{last=t;frame(t)});
 }
 try{boot()}catch(err){console.error(err);$('startBtn').textContent='Error: '+err.message;window.__err=err}
-window.__game={G,player,camera,scene,keys,inter,doInteractuar,startFlight,grantWish,openWish,doDrop,FL,get curInter(){return curInter}};
+window.__game={G,player,camera,scene,keys,inter,doInteract,startFlight,grantWish,openWish,doDrop,FL,get curInter(){return curInter}};
 </script></body></html>
